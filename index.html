@@ -21,6 +21,16 @@
 
         const lineWidth = 15
 
+        const field = {
+            w: window.innerWidth,
+            h: window.;innerHeight,
+            //Método que configura as características do campo
+            draw: function (){
+                canvasCtx.fillStyle = "#286047"
+                canvasCtx.fillRect(0, 0, window.innerWidth, window.innerHeight)
+            }
+        }
+
         function setup (){
            canvasEl.width  = canvasCtx.width = window.innerWidth
            canvasEl.height = canvasCtx.height = window.innerHeight
@@ -28,9 +38,8 @@
 
         //Função que desenha os objetos
         function draw (){
-            //Desenha o campo
-            canvasCtx.fillStyle = "#286047"
-            canvasCtx.fillRect(0, 0, window.innerWidth, window.innerHeight)
+            //Método que desenha o campo
+            field.draw()
 
             //Desenha a linha central
             canvasCtx.fillStyle = "#ffffff"
