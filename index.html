@@ -47,6 +47,7 @@
             },
         }
 
+        //Definindo o Objeto raquete esquerda
         const leftPaddle = {
             x: gapX,
             y: 100,
@@ -58,6 +59,7 @@
            },
         }
 
+        //Definindo o Objeto raquete direita
         const rightPaddle = {
             x: field.w - line.w - gapX,
             y: 120,
@@ -69,6 +71,7 @@
            },
         }
 
+        //Definindo o Objeto placar
         const score = {
             human:3,
             computer:1,
@@ -84,19 +87,31 @@
             },
         }
 
+        //Definindo o Objeto rbola
         const ball = {
             x:300,
             y:200,
             r:20,
+            //Essa proprieda speed será respnsável por aumentar a velocidade de movimento da bolinha
+            speed:5,
+            //metodo privado que faz com que a bolinha mude de lugar na tela (incrementa os pixels)
+            _move: function(){
+                this.x += 1 * this.speed
+                this.y += 1 * this.speed
+            },
             draw: function (){
-            canvasCtx.beginPath()
-            canvasCtx.fillStyle = "#ffffff"
-            canvasCtx.arc(this.y, this.x, this.r, 0, 2 * Math.PI, false)
-            canvasCtx.fill()
+                canvasCtx.beginPath()
+                canvasCtx.fillStyle = "#ffffff"
+                canvasCtx.arc(this.y, this.x, this.r, 0, 2 * Math.PI, false)
+                canvasCtx.fill()
+                //É necessário chamar no método move dentro do método que desenha a bolinha na tela pra
+                //que o usuário consiga ver a bolinha se movendo
+                this._move()
             },
 
         }
 
+        //Função que seta os limites do campo
         function setup (){
            canvasEl.width  = canvasCtx.width = field.w
            canvasEl.height = canvasCtx.height = field.h
@@ -121,8 +136,31 @@
 
         }
 
+        //API nativa do navgador que permite suavisar as animações. A função á vem pronta
+        window.animateFrame = (function () {
+            return (
+                //Aqui o tipo de navegador é selecionado e então depois disso a suavização é feita.
+                window.requestAnimationFrame ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                window.oRequestAnimationFrame ||
+                window.msRequestAnimationFrame ||
+                function (callback) {
+                    //Animando os objetos com o metodo window.setTimeout
+                    return window.setTimeout(callback, 1000 / 60)
+                }
+            )
+        }
+        )()
+
+        //Função main
+        function main(){
+            animateFrame(main)
+            draw()
+        }
+
         setup()
-        draw()
+        main()
 
     </script>
 </body>
