@@ -17,9 +17,9 @@
     <canvas></canvas>
     <script>
         const canvasEl = document.querySelector("canvas"),
-            canvasCtx = canvasEl.getContext("2d")
+            canvasCtx = canvasEl.getContext("2d"),
+        gapX = 10
 
-        const gapX = 10
         const mouse = { x: 0, y: 0 }
 
         //Definindo o objeto campo
@@ -68,7 +68,7 @@
         //Definindo o Objeto raquete direita
         const rightPaddle = {
             x: field.w - line.w - gapX,
-            y: 120,
+            y: 0,
             w: line.w,
             h: 200,
             _move: function () {
@@ -83,8 +83,8 @@
 
         //Definindo o Objeto placar
         const score = {
-            human:3,
-            computer:1,
+            human:1,
+            computer:2,
             draw: function (){
                 canvasCtx.font = "bold 72px Arial"
                 canvasCtx.textAlign = "center"
@@ -99,21 +99,41 @@
 
         //Definindo o Objeto rbola
         const ball = {
-            x:300,
-            y:200,
+            x:0,
+            y:0,
             r:20,
             //Essa proprieda speed será respnsável por aumentar a velocidade de movimento da bolinha
             speed:5,
+            directionX: 1,
+            directionY: 1,
+            //método que verifia a colisão com as laterais da tela
+            _calcPosition: function() {
+                if((this.y < 0 && this.directionY < 0) ||
+                    (this.y > field.h - this.r && this.directionY > 0)){
+
+                    this._reverseY()
+                }
+            },
+            
+            _reverseX: function() {
+                this.directionX *= -1
+            },
+            //inverte a direção da bolinha no eixo vertical
+            _reverseY: function() {
+                this.directionY *= -1
+            },
             //metodo privado que faz com que a bolinha mude de lugar na tela (incrementa os pixels)
             _move: function(){
-                this.x += 1 * this.speed
-                this.y += 1 * this.speed
+                this.x += this.directionX * this.speed
+                this.y += this.directionY * this.speed
             },
             draw: function (){
                 canvasCtx.beginPath()
                 canvasCtx.fillStyle = "#ffffff"
-                canvasCtx.arc(this.y, this.x, this.r, 0, 2 * Math.PI, false)
+                canvasCtx.arc(this.x, this.y, this.r, 0, 2 * Math.PI, false)
                 canvasCtx.fill()
+                
+                this._calcPosition()
                 //É necessário chamar no método move dentro do método que desenha a bolinha na tela pra
                 //que o usuário consiga ver a bolinha se movendo
                 this._move()
@@ -160,8 +180,7 @@
                     return window.setTimeout(callback, 1000 / 60)
                 }
             )
-        }
-        )()
+        })()
 
         //Função main
         function main(){
